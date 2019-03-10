@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       					 http://www.springframework.org/schema/beans/spring-beans.xsd
+       					 http://www.springframework.org/schema/aop
+       					 http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 1. 创建目标类  -->
+	<bean id="userServiceId" class="com.itheima.d_aspect.a_xml.UserServiceImpl"></bean>
+	
+	<!-- 2. 创建切面类  (切面类)-->
+	<bean id="myAspectId" class="com.itheima.d_aspect.a_xml.MyAspect"></bean>
+
+	<!-- 3. aop 编程 
+		<aop:aspect> 将切面类 声明“切面”, 从而获得通知 (方法们)
+			ref: 切面类的引用
+		<aop:pointcut> 声明一个切入点, 所有的通知都可以使用
+			expression: 切入点表达式
+			id 名称, 用于其他通知引用
+	-->
+	<aop:config>
+		<aop:aspect ref="myAspectId">
+			<aop:pointcut expression="execution(*  com.itheima.d_aspect.a_xml.UserServiceImpl.*(..))" id="MyProntCut"/>
+												
+			<!-- 3.1 前置通知 
+			<aop:before method="MyBefore" pointcut="" pointcut-ref=""/>
+				method : 通知, 及方法名
+				pointcut : 切入点表达式, 此表达式只能当前通知使用。
+				pointcut-ref : 切入点引用, 可以与其他通知共享切入点。
+			通知方法格式: public void MyBefore(Joinpoint joinPoint) {
+				参数1: org.aopalliance.intercept.Joinpoint 用于描述链接点 (目标方法)
+			例如: <aop:before method="myBefore" pointcut-ref="MyProntCut"/>
+			-->
+			
+			<!-- 3.2  后置通知, 目标方法后执行, 获得返回值
+			<aop:after-returning method="" pointcut-ref=""/>
+				returning 通知方法第二参数的名称
+			通知方法格式: public void myAfterReturning(JoinPoint joinPoint, Object ret) {
+				参数一: 连接点描述
+				参数二: 类型 Object, 参数名 returning="ret" 配置的
+			例如:
+			<aop:after-returning method="myAfterReturning" pointcut-ref="MyProntCut" returning="ret"/>
+			-->
+		
+		   <!-- 3.3 环绕通知
+		   <aop:around method="" pointcut-ref=""/>
+				通知方法格式：public Object myAround(ProceedingJoinPoint joinPoint) throws Throwable{
+					返回值类型：Object
+					方法名：任意
+					参数：org.aspectj.lang.ProceedingJoinPoint
+					抛出异常
+				执行目标方法：Object obj = joinPoint.proceed();
+				例如：
+			<aop:around method="myAround" pointcut-ref="MyProntCut"/>
+		    -->
+		    <aop:after-throwing method="myAfterThrowing" pointcut-ref="MyProntCut" throwing="e"/>
+		    
+		    
+		</aop:aspect>
+	</aop:config>
+	
+</beans>

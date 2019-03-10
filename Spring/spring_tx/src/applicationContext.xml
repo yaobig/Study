@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       					 http://www.springframework.org/schema/beans/spring-beans.xsd
+       					 http://www.springframework.org/schema/aop
+       					 http://www.springframework.org/schema/aop/spring-aop.xsd
+       					 http://www.springframework.org/schema/context 
+       					 http://www.springframework.org/schema/context/spring-context.xsd">
+       					 
+     <!-- datasource -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/spring_tx"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value="123456"></property>
+	</bean>
+
+     <!-- dao -->
+     <bean id="accountDao" class="com.dao.impl.AccountDaoImpl">
+     	<property name="dataSource" ref="dataSource"></property>
+     </bean>
+     <!-- service -->
+	  <bean id="accountService" class="com.service.impl.AccountServcieImpl">
+	  	<property name="accountDao" ref="accountDao"></property>
+	  </bean>
+</beans>

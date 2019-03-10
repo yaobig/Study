@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+        
+     <!-- <property name="cname" value="#{'jake'}"></property> 
+     	  <property name="cname" value="#{customerId.name?.toUpperCase()}"></property>
+     		通过另一个bean，获得属性，调用的方法
+		<property name="cname" value="#{customerId.cname?.toUpperCase()}"></property>
+			?.  如果对象不为null，将调用方法
+     -->
+	<bean id="customerId" class="com.ithema.f_xml.d_spel.Customer">
+		<property name="cname" value="#{customerId.cname?.toUpperCase()}"></property>
+		<property name="pi" value="#{T(java.lang.Math).PI}"></property>
+	</bean>
+</beans>

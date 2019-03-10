@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       					 http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 1. 创建目标类  -->
+	<bean id="userServiceId" class="com.itheima.a_proxy.b_factory_bean.UserServiceImpl"></bean>
+	
+	<!-- 2. 创建切面类  -->
+	<bean id="myAspectId" class="com.itheima.a_proxy.b_factory_bean.MyAspect"></bean>
+	
+	<!-- 创建代理类
+		* 使用工厂 bean FcatoryBean , 底层调用 getObject() 返回特殊 bean
+		* ProxyFactoryBean 用于创建代理工厂 bean ， 生成特殊代理对象 
+			interfaces : 确定接口们
+				通过  <array> 可以设置多个值
+				只有一个值时, value=""
+			target : 确定目标类
+			interceptorNames : 通知 切面类 的名称, 类型    String[], 如果设置一个值 value=""
+			optimize : 强制使用 cglib
+					<property name="optimize" value="true"></property>
+			底层机制
+				如果目标类接口, 采用 jdk 动态代理
+				如果没有接口, 采用 cglib 字节码增强
+				如果声明   optimize = true , 无论是否有接口, 都采用  cglib
+	  -->
+	<bean id="proxyServiceId" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<!-- 确定接口们  -->
+		<property name="interfaces" value="com.itheima.a_proxy.b_factory_bean.UserService"></property>
+		<!-- 目标类 -->
+		<property name="target" ref="userServiceId"></property>
+		<!-- 切面类 -->
+		<property name="interceptorNames" value="myAspectId"></property>
+		<!-- 补充     -->
+		<!-- <property name="optimize" value="true"></property> -->
+	</bean>
+</beans>

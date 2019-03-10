@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
+  
+  	<!-- 记载配置文件  
+  		"classpath:"浅醉表示 src 下
+  		在配置文件之后通过  ${key} 获得内容
+  	-->
+  	<context:property-placeholder location="classpath:com/f_properties/jdbcInfo.properties"/>
+  	
+  	<!-- 创建数据源  c3p0 -->
+  	<bean id="dataSourceId" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+  		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+  	</bean>
+  
+  
+  	<!-- 配置dao -->
+  	<bean id="UserDaoId" class="com.f_properties.UserDao">
+  		<property name="dataSource" ref="dataSourceId"></property>
+  	</bean>
+  
+  
+  
+</beans>
