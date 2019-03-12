@@ -16,9 +16,8 @@ public class FlowSumMapper extends Mapper<LongWritable, Text,Text,FlowBean> {
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String line = value.toString();
-        // \\s+ 匹配1个或多个空格
-        String[] fields = line.split("\\s+");
-        String phoneNum = fields[0];
+        String[] fields = line.split("\t");
+        String phoneNum = fields[1];
         long upFlow = Long.parseLong(fields[fields.length-3]);
         long downFlow = Long.parseLong(fields[fields.length-2]);
         k.set(phoneNum);

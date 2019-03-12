@@ -1,7 +1,6 @@
 package com.bigdata.hadoop.flowsum;
 
 import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.WritableComparable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -10,7 +9,7 @@ import java.io.IOException;
 /**
  * Created by daoyao
  */
-public class FlowBean implements WritableComparable<FlowBean> {
+public class FlowBean implements Writable {
 
     private long upFlow;
 
@@ -85,12 +84,5 @@ public class FlowBean implements WritableComparable<FlowBean> {
         this.downFlow = dataInput.readLong();
 
         this.sumFlow = dataInput.readLong();
-    }
-
-
-    // 这里就是 Bean 比较大小的方法
-    public int compareTo(FlowBean o) {
-        // 实现按照总榴莲搞得倒序排序
-        return this.sumFlow>o.getSumFlow()?-1:1;
     }
 }
