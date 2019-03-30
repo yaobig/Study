@@ -34,5 +34,6 @@ public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritab
         }
         sum.set(count);
         context.write(key, sum);
+        context.getCounter("r",Util.getInFo(this,"reduce")).increment(1);
     }
 }

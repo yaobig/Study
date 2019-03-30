@@ -44,6 +44,7 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritabl
             // 使用 mr 程序的上下文 context
             // 作为 reduce 节点的输入数据
             context.write(word,one);
+            context.getCounter("m",Util.getInFo(this,"map")).increment(1);
         }
     }
 }

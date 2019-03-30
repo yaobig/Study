@@ -3,6 +3,7 @@ package com.bigdata.hadoop.flowsum.partitioner;
 
 import com.bigdata.hadoop.flowsum.FlowBean;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -56,7 +57,6 @@ public class FlowSumProvince {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf);
         job.setJarByClass(FlowSumProvince.class);
-
         job.setMapperClass(FlowSumProvinceMapper.class);
         job.setReducerClass(FlowSumProvinceReducer.class);
 
