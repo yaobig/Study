@@ -55,8 +55,6 @@ public class MaxTempApp {
         job.setPartitionerClass(TotalOrderPartitioner.class);
 
 
-
-
         // 将 sample 数据写入分区文件
         InputSampler.writePartitionFile(job,sampler);
 
