@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!--namespace 表示命名空间 -->
+	<mapper namespace="com.mapper.UserMapper">
+		<resultMap type="com.po.User" id="resultMap">
+			<id property="id" column="id"/>
+			<result property="name" column="name"/>
+			<result property="age" column="age"/>
+		</resultMap>
+		<select id="findAllUser" resultMap="resultMap">
+			select * from t_student
+		</select>
+	</mapper>

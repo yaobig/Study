@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+	<configuration>
+		<!-- 引入数据库连接配置文件 -->
+		<properties resource="db.properties" />
+		<!-- 使用扫描包的形式定义别名 -->
+		<typeAliases>
+			<package name="com.po"/>
+		</typeAliases>
+		<!-- 配置环境, 默认的环境 id 为 mysql -->
+		<environments default="mysql">
+		<!-- 配置 id 为 mysql 的数据库环境 -->
+			<environment id="mysql">
+				<!-- 使用 JDBC 的事务管理器 -->
+				<transactionManager type="JDBC" />
+					<!-- 数据库连接池 -->
+					<dataSource type="POOLED">
+						<property name="driver" value="${jdbc.driver}"/>
+						<property name="url" value="${jdbc.url}"/>
+						<property name="username" value="${jdbc.username}"/>
+						<property name="password" value="${jdbc.password}"/>
+					</dataSource>		
+			</environment>
+		</environments>		
+		<!-- 配置 Mapper 的值 -->
+		<mappers>
+			<mapper resource="com/mapper/idCardMapper.xml"/>
+			<mapper resource="com/mapper/PersonMapper.xml"/>
+		</mappers>
+	</configuration>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!--namespace 表示命名空间 -->
+	<mapper namespace="com.mapper.CustomerMapper">
+		<!-- 根据客户编码获取客户信息 -->
+		<select id="findCustomerById" parameterType="Integer" 
+		resultType="com.po.Customer">
+			select * from t_user where id = #{id}
+		</select>
+		<!-- 模糊查询 -->
+		<select id="findCustomerByName" parameterType="String"
+		resultType="com.po.Customer">
+		<!-- SQL 语句中 ${} 用来表示拼接 SQL 的字符串， 即不加解释的原样输出，  "${value}" 表示要拼接的是简单类型参数 -->
+		select * from t_user where username like '%${value}%'
+		<!-- 防止  SQL 注入还能实现查询， 可以在 SQL 语句中添加 concat() 函数进行字符串的拼接 -->
+		<!-- select * from t_user where username like  concat('%',${value},'%') -->
+		</select>
+		<!-- 添加客户 -->
+		<insert id="addCustomer" parameterType="com.po.Customer" 
+		keyProperty="id" useGeneratedKeys="true">
+			insert into t_user(username,jobs,phone)
+			value(#{username},#{jobs},#{phone}) 
+		</insert>
+		<!-- 更新客户信息 -->
+		<update id="updateCustomer" parameterType="com.po.Customer">
+			update t_user set
+			username=#{username},jobs=#{jobs},phone=#{phone}
+			where id=#{id}
+		</update>
+		<!-- 删除客户 -->
+		<delete id="deleteCustomer" parameterType="com.po.Customer">
+			delete from t_user where id=#{id}
+		</delete>
+	</mapper>

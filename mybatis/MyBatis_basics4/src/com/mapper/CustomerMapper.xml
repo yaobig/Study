@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.mapper.CustomerMapper">
+	
+	
+		<!-- MyBatis 的  <bind> 元素可以通过 OGNL 表达式来创建一个上下文变量, 其使用方式如下: -->
+		<!-- <bind> 元素定义了一个 name 为  pattern_username 的变量，<bind> 元素中 value 的属性值就是拼接的查询字符串, 
+		其中   _parameter.getUsername()  表示传递过来的参数 (也可以直接写成对应的参数变量名, 如 username)。
+		在 SQL 语句中， 直接使用 <bind> 元素的 name 属性值即可进行动态 SQL 组装
+	    -->
+		<select id="findCustomerByName" parameterType="com.po.Customer" resultType="com.po.Customer">
+		<!--  _parameter.getUsername() 也可直接写成传入的字段属性名, 即 username -->
+		<bind name="pattern_username" value="'%' + _parameter.getUsername() + '%'"/>
+		select * from t_user
+		where
+		username like #{pattern_username}
+		</select>
+	
+	
+		<!-- 
+			<foreach>
+			item: 配置的是循环中当前的元素。
+			index: 配置的是当前元素在集合的位置下标。
+			collection: 配置的 list 是传递过来的参数类型 (首字母小写), 它可以是一个array、list (或 collection)、Map 集合的键、POJO 包装类中数组或集合类型的属性名等。
+			open 和 close: 配置的是以什么符号将这些集合元素包装起来。
+			separator: 配置的是各个元素的间隔符。
+		 -->
+		<!-- 当使用字典 (Map.Entry 对象的集合)时, index 是键, item 是值 -->
+		<select id="findCustomerByIds" parameterType="List" resultType="com.po.Customer">
+			select * from t_user where id in
+			<foreach item="id" collection="list" index="index" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</select>
+	
+		<!-- <set> 元素 
+		在配置的SQL语句中, 使用了 <set> 和<if> 元素相结合的方式来组装 update 语句。
+		其中<set> 元素会动态前置 SET 关键字, 同时也会消除 SQL 语句中最后一个多余的逗号;
+		<if> 元素用于判断相应的字段是否传入值，如果传入的更新字段非空, 就将此字段进行动态 SQL组装,
+		并更新此字段, 否则此字段不执行更新。
+		-->
+		<update id="updateCustomer" 
+		parameterType="com.po.Customer">
+			update t_user
+			<set>
+				<if test="username != null and username !=''">
+					username=#{username},
+				</if>
+				<if test="jobs !=null and jobs !=''">
+					jobs =#{jobs},
+				</if>
+				<if test="phone !=null and phone !=''">
+					phone=#{phone},
+				</if>
+			</set>
+			where id=#{id}
+		</update>
+	
+	
+	
+		<!-- 使用 <if> 元素使用 -->
+		<select id="findCustomerByNameAndJobs"
+		parameterType="com.po.Customer"
+		resultType="com.po.Customer">
+		<!-- where 1=1 是为了避免where 关键字后面的第一个词直接就是 “and”而导致语法错误。
+			select * from t1 where 1=1;
+			实际等效于select * from t1 where true;
+			语句将返回t1中所有的记录行
+		 -->
+		 
+		 
+		 
+
+		 
+		 
+		 
+		 
+		 <!-- <trim>元素 对↓进行修改
+		 	使用<trim> 元素对 "where 1=1" 条件进行了替换,<trim> 元素的作用是去除一些特殊的字符串,
+		 	它的 prefix属性代表的是语句的前缀 (这里使用 where 来连接后面的 SQL 片段), 
+		 	而 prefixOverrides 属性代表的是需要去除那些特殊字符串 (这里定义了要去除 SQL 中的 and)，
+		 	上面的写法和使用 <where> 元素基本是等效的
+		 -->
+		 select * from t_user
+		 <trim prefix="where" prefixOverrides="and">
+		 	<if test="username !=null and username !=''">
+		 		and username like concat('%',#{username},'%')
+		 	</if>
+		 	<if test="jobs !=null and jobs !=''">
+		 		and jobs = #{jobs}
+		 	</if>
+		 </trim>
+		 
+		 
+		 
+		 
+		<!-- 
+		 <where>
+			select * from t_user
+		 	<if test="username !=null and username !=''">
+		 		and username like concat('%',#{username},'%')
+		 	</if>
+		 	<if test="jobs != null and jobs !=''">
+		 		and jobs = #{jobs}
+		 	</if>
+		 </where> 
+		 -->
+		 
+		 
+		 
+		 
+		 
+			<!-- select * from t_user where 1=1
+			
+			<choose>
+				<when test="username !=null and username !=''"> 
+					and username like concat('%',#{username},'%')
+				</when>
+				<when test="jobs !=null and jobs !=''">
+					and jobs =#{jobs}
+				</when>
+				<otherwise>
+					and phone is not null
+				</otherwise>
+			</choose> -->
+			
+			
+			
+			
+			
+			<!--
+			select * from t_user where 1=1
+			 <if test="username !=null and username !=''">
+				and username like concat('%',#{username},'%')
+			</if>
+			<if test="jobs != null and jobs !=''">
+				and jobs =#{jobs}
+			</if> -->
+			
+			
+		</select>
+	</mapper>
