@@ -37,11 +37,13 @@ public class HbaseDdemo {
 //            hbaseDdemo.createTable("job_internet", "RAW_DATA,TAG_DATA,PERCEPT_DATA");
 //            hbaseDdemo.createTable("job_cloud", "cloud");
             // 插入数据
-            Map<String,Object> map = new HashMap<String, Object>();
-            map.put("id","1");
-            map.put("jobname","云计算");
-            hbaseDdemo.add("job_internet",map);
-//            hbaseDdemo.get("job_cloud");
+//            Map<String,Object> map = new HashMap<String, Object>();
+//            map.put("id","1");
+//            map.put("jobname","云计算");
+//            hbaseDdemo.add("job_internet",map);
+
+            // 查询
+            hbaseDdemo.get("ns1:t1","f1","JOB_NAME");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,15 +73,16 @@ public class HbaseDdemo {
 
     }
 
+
     /**
      * 添加数据
      */
     public void add(String tableName,Map<String,Object> map)throws IOException{
         Table table = null;
         try {
-            table = connection.getTable(TableName.valueOf(tableName));
-            Put put = new Put(Bytes.toBytes((String) map.get("id")));
-            put.addColumn(Bytes.toBytes("RAW_DATA"), Bytes.toBytes("JOB_NAME"),Bytes.toBytes((String) map.get("jobname")));
+            table = connection.getTable(TableName.valueOf("ns1:t1"));
+            Put put = new Put(Bytes.toBytes(2));
+            put.addColumn(Bytes.toBytes("f1"), Bytes.toBytes("JOB_NAME"),Bytes.toBytes("云计算"));
         }finally {
             IOUtils.closeQuietly(table);
         }
@@ -88,11 +91,11 @@ public class HbaseDdemo {
     /**
      * 获取数据
      */
-    public void get(String tableName)throws IOException{
+    public void get(String tableName,String family,String qualifier)throws IOException{
         Table table = connection.getTable(TableName.valueOf(tableName));
-        Get get = new Get(Bytes.toBytes("id"));
+        Get get = new Get(Bytes.toBytes("1"));
         Result r = table.get(get);
-        byte[] value = r.getValue(Bytes.toBytes("RAW_DATA"), Bytes.toBytes("JOB_NAME"));
-        System.out.println(Bytes.toInt(value));
+        byte[] value = r.getValue(Bytes.toBytes(family), Bytes.toBytes(qualifier));
+        System.out.println(Bytes.toString(value));
     }
 }
