@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -32,8 +33,15 @@ public class HbaseDdemo {
             connection = ConnectionFactory.createConnection(conf);
             admin = connection.getAdmin();
             HbaseDdemo hbaseDdemo = new HbaseDdemo();
-            hbaseDdemo.createTable("job_internet", "RAW_DATA,TAG_DATA,PERCEPT_DATA");
-            hbaseDdemo.createTable("job_cloud", "cloud");
+            // 创建表
+//            hbaseDdemo.createTable("job_internet", "RAW_DATA,TAG_DATA,PERCEPT_DATA");
+//            hbaseDdemo.createTable("job_cloud", "cloud");
+            // 插入数据
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("id","1");
+            map.put("jobname","云计算");
+            hbaseDdemo.add("job_internet",map);
+//            hbaseDdemo.get("job_cloud");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,15 +71,28 @@ public class HbaseDdemo {
 
     }
 
+    /**
+     * 添加数据
+     */
     public void add(String tableName,Map<String,Object> map)throws IOException{
         Table table = null;
         try {
             table = connection.getTable(TableName.valueOf(tableName));
             Put put = new Put(Bytes.toBytes((String) map.get("id")));
-            
+            put.addColumn(Bytes.toBytes("RAW_DATA"), Bytes.toBytes("JOB_NAME"),Bytes.toBytes((String) map.get("jobname")));
         }finally {
-            IOUtils.closeQuietly();
+            IOUtils.closeQuietly(table);
         }
     }
 
+    /**
+     * 获取数据
+     */
+    public void get(String tableName)throws IOException{
+        Table table = connection.getTable(TableName.valueOf(tableName));
+        Get get = new Get(Bytes.toBytes("id"));
+        Result r = table.get(get);
+        byte[] value = r.getValue(Bytes.toBytes("RAW_DATA"), Bytes.toBytes("JOB_NAME"));
+        System.out.println(Bytes.toInt(value));
+    }
 }
