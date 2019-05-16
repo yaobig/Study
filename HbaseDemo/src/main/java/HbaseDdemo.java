@@ -37,13 +37,14 @@ public class HbaseDdemo {
 //            hbaseDdemo.createTable("job_internet", "RAW_DATA,TAG_DATA,PERCEPT_DATA");
 //            hbaseDdemo.createTable("job_cloud", "cloud");
             // 插入数据
-//            Map<String,Object> map = new HashMap<String, Object>();
-//            map.put("id","1");
-//            map.put("jobname","云计算");
-//            hbaseDdemo.add("job_internet",map);
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("row","1");
+            map.put("JOB_NAME","云计算");
+            map.put("family","f1");
+            hbaseDdemo.add("ns1:t1",map);
 
             // 查询
-            hbaseDdemo.get("ns1:t1","f1","JOB_NAME");
+//            hbaseDdemo.get("ns1:t1","f1","JOB_NAME");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,9 +81,9 @@ public class HbaseDdemo {
     public void add(String tableName,Map<String,Object> map)throws IOException{
         Table table = null;
         try {
-            table = connection.getTable(TableName.valueOf("ns1:t1"));
-            Put put = new Put(Bytes.toBytes(2));
-            put.addColumn(Bytes.toBytes("f1"), Bytes.toBytes("JOB_NAME"),Bytes.toBytes("云计算"));
+            table = connection.getTable(TableName.valueOf(tableName));
+            Put put = new Put(Bytes.toBytes((String)map.get("row")));
+            put.addColumn(Bytes.toBytes((String) map.get("family")), Bytes.toBytes("JOB_NAME"),Bytes.toBytes((String)map.get("JOB_NAME")));
         }finally {
             IOUtils.closeQuietly(table);
         }
@@ -92,9 +93,12 @@ public class HbaseDdemo {
      * 获取数据
      */
     public void get(String tableName,String family,String qualifier)throws IOException{
+        // 此处需要添加 表空间 ：表名
         Table table = connection.getTable(TableName.valueOf(tableName));
+        //  此处需要添加 row
         Get get = new Get(Bytes.toBytes("1"));
         Result r = table.get(get);
+        // 参数分别为： 列 id
         byte[] value = r.getValue(Bytes.toBytes(family), Bytes.toBytes(qualifier));
         System.out.println(Bytes.toString(value));
     }
